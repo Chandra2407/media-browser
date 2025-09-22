@@ -36,6 +36,7 @@ File Upload   File Streaming  Event Bus
  /media/       /media/       Compression Service
 (directory)   (directory)   (zlib, libuv pool)
 
+
 🗂 Folder Structure
 media-server/
 │

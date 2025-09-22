@@ -1,8 +1,10 @@
-🎬 Node.js Media Server
+Node.js Media Server
 
 A full-stack Node.js media server that allows users to upload, stream, and manage video/audio files in real-time, demonstrating Node.js features like streams, buffers, events, pipes, file system operations, libuv thread pool, and network I/O.
 
-📌 Features
+--------------------------------------------------------------------------------
+
+Features
 
 Upload video and audio files via browser
 
@@ -10,13 +12,16 @@ Stream video/audio files in-browser using <video> and <audio>
 
 Real-time upload progress and file updates using Server-Sent Events (SSE)
 
-Automatically compress uploaded files using zlib (libuv thread pool)
+Automatic compression of uploaded files using zlib (libuv thread pool)
 
 Tabbed UI to separate Video and Audio files
 
 Live updates for newly uploaded files from any user
 
-🏗 System Design
+--------------------------------------------------------------------------------
+
+System Design
+
 High-Level Architecture
           ┌───────────────┐
           │   Browser     │
@@ -29,31 +34,35 @@ High-Level Architecture
           └─────┬─────────┘
    ┌─────────────┼─────────────┐
    │             │             │
-File Upload   File Streaming  Event Bus
-(stream/buffer)   (fs streams) (EventEmitter)
+ Routes        Controllers    Services
    │             │             │
-   ▼             ▼             ▼
- /media/       /media/       Compression Service
-(directory)   (directory)   (zlib, libuv pool)
+   └─────────────┴─────────────┘
+                │
+           Event Bus (EventEmitter)
+                │
+                ▼
+           /media/ folder
 
+--------------------------------------------------------------------------------
 
-🗂 Folder Structure
+Folder Structure
 media-server/
 │
-├── server.js                 # Entry point for backend
-├── package.json              # Node.js project metadata
-├── README.md                 # Project documentation
+├── server.js                 # Entry point
+├── package.json
+├── README.md
 │
-├── routes/                   # HTTP routes
-│   ├── uploadRoute.js        # POST /upload
-│   ├── streamRoute.js        # GET /video
-│   ├── eventsRoute.js        # GET /events (SSE)
-│   └── fileRoute.js          # GET /files
+├── routes/                   # All routes delegate to controllers
+│   ├── uploadRoute.js
+│   ├── streamRoute.js
+│   ├── eventsRoute.js
+│   └── fileRoute.js
 │
-├── controllers/              # Orchestrates logic for routes
+├── controllers/              # Controllers handle route logic
 │   ├── uploadController.js
 │   ├── streamController.js
-│   └── eventsController.js
+│   ├── eventsController.js
+│   └── fileController.js
 │
 ├── services/                 # Business logic / utilities
 │   ├── fileService.js
@@ -63,59 +72,56 @@ media-server/
 ├── events/                   # EventEmitter for backend events
 │   └── eventBus.js
 │
-├── media/                    # Uploaded audio/video files
-│   └── sample.mp4            # Example file
+├── media/                    # Uploaded files stored here
 │
-├── client/                   # Frontend UI
-│   └── index.html            # Main HTML page
-│
-└── .gitignore                # Optional: ignore node_modules, media/
+└── client/                   # Frontend UI
+    └── index.html
 
-🖥 Frontend Features
+--------------------------------------------------------------------------------
 
-Upload button at top
+Frontend Features
 
-Tabbed file list (Video / Audio)
+Upload button at the top
 
-Click file to play in <video> or <audio> player
+Tabbed file list for Video / Audio files
 
-Real-time updates for new uploads from other users
+Click a file to play in <video> or <audio> player
 
-🌐 Backend Features
+Real-time updates for new uploads using SSE
+
+--------------------------------------------------------------------------------
+
+Backend Features
+
+All routes pass through controllers → then call services
 
 Handles file upload via streams
 
-Serves files using chunked streaming with Range headers
+Streams files using chunked streaming and Range headers
 
-Emits events for upload progress, completion, and new files
+Emits events using EventEmitter for upload progress and new files
 
-Compresses files using zlib without blocking main thread
+Compresses files asynchronously using zlib (libuv thread pool)
 
 Watches /media/ folder for newly added files
 
-📂 File Storage & Streaming
+--------------------------------------------------------------------------------
 
-Files stored in /media/ directory on server
-
-Streamed in chunks using fs.createReadStream()
-
-Compression handled by zlib (libuv thread pool)
-
-File watcher (fs.watch) triggers frontend updates
-
-🌐 API Endpoints
-Method	Endpoint	Description
-POST	/upload	Upload video/audio file
-GET	/video?file=xyz	Stream requested file
-GET	/files	Get list of uploaded files
-GET	/events	SSE for live updates
+API Endpoints
+Method	Endpoint	Controller	Description
+POST	/upload	uploadController	Upload video/audio file
+GET	/video?file=xyz	streamController	Stream requested file
+GET	/files	fileController	Get list of uploaded files
+GET	/events	eventsController	SSE for live updates
 
 SSE Data Format:
 
 data: video:movie1.mp4
 data: audio:song1.mp3
 
-⚙ Setup & Run
+--------------------------------------------------------------------------------
+
+Setup & Run
 # 1. Clone repository
 git clone <repo-url>
 cd media-server
@@ -132,7 +138,9 @@ node server.js
 # 5. Open frontend
 open client/index.html  # Or open in browser manually
 
-🛠 Tech Stack
+--------------------------------------------------------
+
+Tech Stack
 
 Backend: Node.js (http, fs, streams, events, zlib)
 
@@ -142,9 +150,9 @@ Communication: HTTP + Server-Sent Events (SSE)
 
 Storage: Local disk (/media/)
 
-Optional: Compression via libuv thread pool
+--------------------------------------------------------
 
-⚖ Scalability & Limitations
+Scalability & Limitations
 
 Number of files limited by disk space and filesystem
 
@@ -154,12 +162,13 @@ Production-ready: Use cloud storage (AWS S3 / GCS) and load balancer
 
 SSE can be replaced with WebSockets for interactive multi-user features
 
-✅ Notes
+--------------------------------------------------------
 
-Organize files in subfolders if storing a large number of files
+Notes
 
 Supports video formats: .mp4, .mov, .mkv, .webm
 
 Supports audio formats: .mp3, .wav, .ogg
 
 Browser must support <video> / <audio> streaming
+

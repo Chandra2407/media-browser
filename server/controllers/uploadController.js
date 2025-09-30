@@ -1,10 +1,18 @@
 const uploadController = async (req, res) => {
     try {
-        res.writeHead(200);
-        res.end('Upload Complete');
+        const success = {
+            message: "Upload successful",
+            statusCode: 200
+        }
+        res.writeHead(200, { "Content-Type": "application/json" })
+            .end(JSON.stringify(success))
     } catch (err) {
-        res.writeHead(500);
-        res.end('Upload failed');
+        const error = {
+            message: "Upload failed",
+            statusCode: 500
+        }
+        res.writeHead(500, { "Content-Type": "application/json" })
+            .end(JSON.stringify(error))
     }
 }
 

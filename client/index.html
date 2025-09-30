@@ -7,9 +7,11 @@
 </head>
 
 <body>
-    <input id="file" type="file" name="file" />
-    <button id="upload" type="submit">Upload</button>
-    <script src="index.js"></script>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input id="file" type="file" name="file" />
+        <button id="upload" type="submit">Upload</button>
+    </form>
+    <script type="module" src="index.js"></script>
 </body>
 
 </html>

@@ -2,7 +2,14 @@ import uploadController from "../controllers/uploadController.js"
 
 const uploadRoute = (req, res) => {
     if (req.method === 'POST') uploadController(req, res)
-    else res.writeHead(404).end("Method not allowed")
+    else {
+        const error = {
+            message: "Mehtod not allowed",
+            statusCode: 404
+        }
+        res.writeHead(404, { "Content-Type": "application/json" })
+            .end(JSON.stringify(error))
+    }
 }
 
 export default uploadRoute

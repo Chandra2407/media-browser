@@ -5,6 +5,7 @@ export const allowedTypes = [
     "video/mkv",
     "video/avi",
     "video/mov",
+    "video/quicktime",
     "audio/mpeg",
     "audio/mp3",
     "audio/wav",

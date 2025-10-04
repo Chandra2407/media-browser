@@ -10,6 +10,7 @@ form.addEventListener("submit", async (e) => {
         return;
     }
     if (!allowedTypes.includes(file.type)) {
+        console.log(file.type);
         alert("Only video or audio files are allowed!");
         return;
     }
